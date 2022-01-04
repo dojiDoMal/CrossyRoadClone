@@ -1,0 +1,95 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CrossyRoadClone</title>
+    <link rel="stylesheet" href="/air-controller.css">
+    <script type="text/javascript" src="https://www.airconsole.com/api/airconsole-1.7.0.js"></script>
+    <style>
+      #background {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+
+      .button {
+        background: #3B3B3B;
+        color: aliceblue;
+        text-align: center;
+        justify-content: center;
+        text-transform: uppercase;
+        font-size: 25px;
+        padding: 5px 10px 5px 10px;
+        border: solid #1f1f1f 1px;
+        border-radius: 10px;
+        height: 100%;
+        position: absolute;
+      }
+
+      #left-button{
+        left: 5%;
+        width: 25%;
+        height: 40%;
+        bottom: 5%;
+      }
+
+      #right-button{
+        left: 5%;
+        width: 25%;
+        height: 40%;
+        bottom: 55%;
+      }
+
+      #jump-button{
+        right: 5%;
+        bottom: 20%;
+        width: 30%;
+        height: 40%;
+      }
+    </style>
+    <script type="text/javascript">
+
+        var airconsole;
+    
+        function App() {
+          var me = this;
+          me.airconsole = new AirConsole({"orientation": "landscape", "synchronize_time" : "true"});
+    
+          me.airconsole.onMessage = function(from, data) {
+            console.log("onMessage", from, data);
+          };
+
+          if (!("ontouchstart" in document.createElement("div"))) {
+            var elements = document.getElementsByTagName("*");
+            for (var i = 0; i < elements.length; ++i) {
+              var element = elements[i];
+              var ontouchstart = element.getAttribute("ontouchstart");
+              if (ontouchstart) {
+                element.setAttribute("onmousedown", ontouchstart);
+              }
+              var ontouchend = element.getAttribute("ontouchend");
+              if (ontouchend) {
+                element.setAttribute("onmouseup", ontouchend);
+              }
+            }
+          }
+        }
+    
+        App.prototype.sendMessageToScreen = function(msg) {
+          this.airconsole.message(AirConsole.SCREEN, {"action": msg});
+        };
+    
+    </script>
+  </head>
+  <body onload="window.app = new App()">
+    <div id="background"></div>
+    <div class="button" id="left-button" ontouchstart="window.app.sendMessageToScreen('left')" ontouchend="window.app.sendMessageToScreen('left-up')">
+      Esquerda
+    </div>
+    <div class="button" id="right-button" ontouchstart="window.app.sendMessageToScreen('right')" ontouchend="window.app.sendMessageToScreen('right-up')">
+      Direita
+    </div>
+    <div class="button" id="jump-button" ontouchstart="window.app.sendMessageToScreen('jump')" ontouchend="window.app.sendMessageToScreen('jump-up')">
+      Frente
+    </div>
+  </body>
+</html>
